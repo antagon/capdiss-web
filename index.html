@@ -1,0 +1,128 @@
+<html>
+	<head>
+		<title>capdiss - Capture File Dissector</title>
+		<style>
+			body { font-size:85%;  }
+			h1 { font-size:200%; font-family:Helvetica; margin-bottom:25px; }
+			h2 { font-size:140%; font-family:Helvetica; margin-bottom:5px; padding-bottom:5px; border-bottom:1px solid #939393; }
+			h3 { font-size:110%; font-family:Helvetica; margin-bottom:5px; padding-bottom:5px; }
+			p { text-align:justify; }
+			#menu { width:100%; margin:0 auto; margin-bottom:40px; }
+			#menu .menu_item { font-family:Helvetica; }
+			#menu .delim { font-size:14px; font-weight:bold; margin-left:5px; margin-right:5px; }
+			#content { width:70%; margin:0 auto; }
+			#content .content_section { font-size:13px; padding:10px; margin-bottom:20px; }
+			#content pre { font-size:95%; font-family:Courier; padding:10px; background-color:#EFEFEF; white-space: pre-wrap; white-space:-moz-pre-wrap; white-space:-pre-wrap; white-space:-o-pre-wrap; word-wrap:break-word; }
+			#content li { padding:5px; }
+			#content ul {  list-style:square; }
+			.cmd { background-color:#EFEFEF; font-family:Courier; padding-left:4px; padding-right:4px; }
+		</style>
+	</head>
+	<body>
+		<div id="content">
+			<h1>capdiss</h1>
+
+			<div id="menu">
+				<span class="menu_item"> <a href="#news">News</a> </span>
+				<span class="delim">&nbsp;</span>
+				<span class="menu_item"> <a href="#description">Description</a> </span>
+				<span class="delim">&nbsp;</span>
+				<span class="menu_item"> <a href="#usage">Usage</a> </span>
+				<span class="delim">&nbsp;</span>
+				<span class="menu_item"> <a href="#interface">Interface</a> </span>
+				<span class="delim">&nbsp;</span>
+				<span class="menu_item"> <a href="#user_scripts">User scripts</a> </span>
+				<span class="delim">&nbsp;</span>
+				<span class="menu_item"> <a href="#download">Download</a> </span>
+			</div>
+
+			<h2 id="news">News</h2>
+
+			<p>
+				<strong>2015-06-18</strong> &#8212; Version <strong>0.1.0</strong> released.
+			</p>
+
+			<h2 id="description">Description</h2>
+
+			<p>
+Capture file dissector with embedded Lua interpreter. With this tool an analyst
+has access to powerful scripting environment that can be used for endless
+variety of tasks, starting from simple packet inspection to building
+sophisticated data-driven programs. The usage of the tool is loosely based on
+principles of <em>awk</em>.
+			</p>
+
+			<p>
+This software is free software licensed under <strong>MIT License</strong>.
+			</p>
+
+			<h2 id="usage">Usage</h2>
+
+			<p>
+Basic usage consists of providing a capture file <span class="cmd">&lt;FILE&gt;</span> and at least one Lua script, provided either as a file with parameter <span class="cmd">-f</span> or as a direct source code with option <span class="cmd">-e</span>. Options can be used multiple times and in combinations of both.
+			</p>
+
+			<pre>
+Usage: capdiss &lt;OPTIONS&gt; &lt;FILE&gt;
+
+Options:
+  -e, --source='PROGTEXT'  load Lua script source code
+  -f, --file=PROGFILE      load Lua script file
+  -v, --version            show version information
+  -h, --help               show usage information (this text)</pre>
+
+			<h2 id="interface">Interface</h2>
+
+			<p>
+As an interface <em>capdiss</em> uses three user defined methods inside a global table <span class="cmd">Capdiss</span>. The methods are named <span class="cmd">begin</span>, <span class="cmd">each</span>, <span class="cmd">finish</span>. These three methods are searched for in each loaded user script. If any of these methods is found, <em>capdiss</em> executes it.
+			</p>
+
+			<p>
+As the names suggest, <span class="cmd">begin</span> is executed first, before any frame is retrieved from the capture file. The method <span class="cmd">finish</span> is executed last, after all the frames were retrieved from the capture file. The method <span class="cmd">each</span> is executed for each retrieved frame from the capture file and unlike the previous methods, it takes two parameters. First parameter is used to pass a timestamp of the frame when it was captured, second parameter is used to pass a frame data.
+			</p>
+
+			<pre>
+--
+-- Simple capdiss script.
+--
+Capdiss = {}
+
+local i = 0
+
+function Capdiss.begin ()
+	print ("Begin parsing...")
+end
+
+function Capdiss.each (ts, frame)
+	i = i + 1
+
+	print (ts .. " :: pkt no. " .. i)
+end
+
+function Capdiss.finish ()
+	print ("Done parsing ... " .. i .. " packets processed.")
+end</pre>
+
+			<h2 id="user_scripts">User scripts</h2>
+
+			<p>
+As a part of the capdiss project we are maintaining a repository of user scripts contributed to by its users. If you have a script that others may find useful, feel free to submit it as a pull request on github. If you have opted out from using github, you can contribute to the repository by sending an email to address <a href="#">capdiss@codeward.org</a> with the script in the attachment along with licensing information.
+			</p>
+
+			<p>
+Scripts with obscure or non-free license will be rejected. Same goes for unlicensed heaps of code. If you are contributing by email, do not forget to include your name, otherwise <em>Anonymous</em> name will be assumed.
+			</p>
+
+			<h2 id="download">Download</h2>
+
+			<p>
+				<a href="https://github.com/antagon/capdiss">Latest changes</a> and all <a href="https://github.com/antagon/capdiss/releases">version releases</a> are always available in <em>capdiss</em>'s git repository</a>.
+			</p>
+
+			<ul>
+				<li> <a href="files/capdiss-0.1.0.tar.gz">capdiss-0.1.0.tar.gz</a> (<a href="files/capdiss-0.1.0.tar.gz.sig">signature</a>) (<a href="https://github.com/antagon/capdiss/blob/0.1.0/ChangeLog">changelog</a>)</li>
+			</ul>
+		</div>
+	</body>
+</html>
+
