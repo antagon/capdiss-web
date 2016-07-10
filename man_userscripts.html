@@ -1,0 +1,161 @@
+<html>
+	<head>
+		<title>Reference Manual - capdiss</title>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body>
+		<div id="content">
+			<h1>Capdiss User Scripts: Reference Manual</h1>
+
+			<p>compatible with version: 0.3.0</p>
+
+			<h2>1 Introduction</h2>
+
+			<p>This is an official guide on writing <em>capdiss</em> user scripts. This guide relies on developer's familiarity with <a href="http://lua.org">Lua</a> (version 5.2) scripting language.</p>
+
+			<h2>2 Environment</h2>
+
+			<p><em>Capdiss</em> loads all standard libraries as the PUC-RIO Lua interpreter would. There are also specific global variables:</p>
+
+			<ul>
+				<li> <a href="#env_capdiss_version">_CAPDISS_VERSION</a> </li>
+				<li> <a href="#env_os">_OS</a> </li>
+				<li> <a href="#env_args">args</a> </li>
+			</ul>
+
+			<h3 id="env_capdiss_version">2.1 _CAPDISS_VERSION</h3>
+
+			<p>String value that represents <em>capdiss</em> version number. Format is "capdiss X.Y.Z".</p>
+
+			<h3 id="env_os">2.2 _OS</h3>
+
+			<p>String value that references a type of operating system. The value is one of the following strings: <strong>linux</strong>, <strong>windows</strong>.</p>
+
+			<h3 id="env_args">2.3 args</h3>
+
+			<p>Table populated with arguments passed to the script at startup, if no arguments were passed, the table contains at least one item, the script name. The table may look like this:</p>
+
+			<pre>
+{ [0] = "scriptname.lua", ["arg1"] = "val1", ["arg1"] = "val2" }</pre>
+
+			<h2>3 Functions</h2>
+
+			<p>For a script to be integrable with <em>capdiss</em>, it should define a set of functions. These are:</p>
+
+			<ul>
+				<li> <a href="#func_begin">begin (filename, link_type)</a> </li>
+				<li> <a href="#func_each">each (frame, ts, num)</a> </a></li>
+				<li> <a href="#func_finish">finish ()</a> </li>
+				<li> <a href="#func_sigaction">sigaction (signo)</a> </li>
+			</ul>
+
+			<p>Unused functions may be ommitted without causing an error, <em>capdiss</em> ignores undefined functions.</p>
+
+			<h3 id="func_begin">3.1 begin (filename, link_type)</h3>
+
+			<p>Function is called first and only once, at the beginning, before any frame's are processed.</p>
+
+			<h4>Parameters</h4>
+
+			<ul>
+				<li>filename (string) - the name of pcap file that is being read.</li>
+				<li>link_type (string) - link-layer header type of pcap file. The value passed is DLT_ name (i.e. EN10MB). See <a href="http://www.tcpdump.org/linktypes.html">libpcap documentation</a>.</li>
+			</ul>
+
+			<h4>Return value</h4>
+
+			<p>Currently no return value is expected.</p>
+
+			<h3 id="func_each">3.2 each (frame, ts, num)</h3>
+
+			<p>Function is called for each frame found in a pcap file.</p>
+
+			<ul>
+				<li>frame (string) - current frame data.</li>
+				<li>ts (number) - UNIX timestamp referencing the time when the frame was captured.</li>
+				<li>num (number) - relative frame number.</li>
+			</ul>
+
+			<h4>Return value</h4>
+
+			<p>Currently no return value is expected.</p>
+
+			<h3 id="func_finish">3.3 finish ()</h3>
+
+			<p>Function is called last and only once, at the end, after all frames had been processed.</p>
+
+			<h4>Parameters</h4>
+
+			<p>Currently no parameters are expected.</p>
+
+			<h4>Return value</h4>
+
+			<p>Currently no return value is expected.</p>
+
+			<h3 id="func_sigaction">3.4 sigaction (signo)</h3>
+
+			<p>Function is called after a signal is delivered to <em>capdiss</em>. This function may be used by scripts to clean up, before abnormal termination of the program.</p>
+
+			<h4>Parameters</h4>
+
+			<p>signo (number) - signal number that was delivered.</p>
+
+			<h4>Return value</h4>
+
+			<p>No return value.</p>
+
+			<h2>4 Examples</h2>
+
+			<h4>4.1 Basic script skeleton</h4>
+
+			<pre>
+local mymod = {}
+
+function mymod.sigaction (signo)
+	io.write (string.format ("Signal was delivered (signo == %d)!", signo))
+end
+
+function mymod.begin (filename, link_type)
+	io.write (string.format ("Parsing '%s' (linktype: %s)...\n", filename, link_type))
+
+	-- Store a copy of the filename for later use
+	mymod.filename = filename
+end
+
+function mymod.each (frame, ts, num)
+	io.write (string.format ("%s :: pkt no. %d\n", os.date ("%Y-%m-%d %H:%M:%S", ts), num)) 
+end
+
+function mymod.finish ()
+	io.write (string.format ("Done parsing '%s'...\n", mymod.filename))
+end
+
+return mymod</pre>
+
+			<h4>4.2 Ethernet II frame dissection</h4>
+
+			<pre>
+local ethdissect = {}
+
+function ethdissect.begin (filename, link_type)
+	if link_type ~= "EN10MB" then
+		error (string.format ("File with unsupported link-layer header type (the script expects %s)", "EN10MB"))
+	end
+end
+
+function ethdissect.each (frame, ts, num)
+	-- Load Ethernet II header dissector
+	local eth = require ("eth")
+
+	local eth_hdr = eth.parse (frame)
+
+	io.write (string.format ("%s =&gt; %s\n", eth_hdr.src, eth_hdr.dst))
+end
+
+return ethdissect</pre>
+		</div>
+	</body>
+</html>
+

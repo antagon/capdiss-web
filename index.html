@@ -4,25 +4,6 @@
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="style.css">
-		<!--<style>
-			body { font-size:84%;  }
-			h1 { font-size:200%; font-family:Helvetica; margin-bottom:25px; }
-			h2 { font-size:140%; font-family:Helvetica; margin-bottom:5px; padding-bottom:5px; border-bottom:1px solid #939393; }
-			h3 { font-size:110%; font-family:Helvetica; margin-bottom:5px; padding-bottom:5px; }
-			a { color:#2D6FAC; }
-			a:visited { color:#2D6FAC; }
-			a:hover { text-decoration:none; }
-			p { text-align:justify; }
-			#menu { width:100%; margin:0 auto; margin-bottom:40px; }
-			#menu .menu_item { font-family:Helvetica; }
-			#menu .delim { font-weight:bold; margin-left:5px; margin-right:5px; }
-			#content { width:70%; margin:0 auto; }
-			#content .content_section { margin-bottom:20px; }
-			#content pre { font-size:105%; font-family:Monospace; padding:10px; background-color:#EFEFEF; white-space: pre-wrap; white-space:-moz-pre-wrap; white-space:-pre-wrap; white-space:-o-pre-wrap; word-wrap:break-word; }
-			#content li { padding:5px; }
-			#content ul { list-style:square; }
-			.cmd {font-size:105%; background-color:#EFEFEF; font-family:Monospace; padding-left:4px; padding-right:4px; }
-		</style>-->
 	</head>
 	<body>
 		<div id="content">
@@ -33,20 +14,22 @@
 				<span class="delim">&nbsp;</span>
 				<span class="menu_item"> <a href="#description">Description</a> </span>
 				<span class="delim">&nbsp;</span>
-				<span class="menu_item"> <a href="#installation">Installation</a> </span>
-				<span class="delim">&nbsp;</span>
 				<span class="menu_item"> <a href="#usage">Usage</a> </span>
 				<span class="delim">&nbsp;</span>
-				<span class="menu_item"> <a href="#examples">Examples</a> </span>
+				<span class="menu_item"> <a href="#installation">Installation</a> </span>
 				<span class="delim">&nbsp;</span>
 				<span class="menu_item"> <a href="#user_scripts">User scripts</a> </span>
 				<span class="delim">&nbsp;</span>
-				<span class="menu_item"> <a href="#download">Download</a> </span>
+				<span class="menu_item"> <a href="#download" style="font-weight:bold;">Download</a> </span>
 			</div>
 
 			<h2 id="news">News</h2>
 
 			<div id="content_section">
+				<p>
+					<strong>2016-07-??</strong> &#8212; Version <strong>0.3.0</strong> released.
+				</p>
+
 				<p>
 					<strong>2015-06-29</strong> &#8212; Version <strong>0.2.1</strong> released.
 				</p>
@@ -64,12 +47,11 @@
 
 			<div id="content_section">
 				<p>
-					Capture file dissector with embedded Lua interpreter. With
+					Capture file dissector with embedded <em>Lua</em> engine. With
 					this tool an analyst has access to powerful scripting
 					environment that can be used for endless variety of tasks,
-					starting from simple packet inspection to building
-					sophisticated data-driven programs. The usage of the tool
-					is loosely based on principles of <em>awk</em>.
+					starting from simple packet dissection to building
+					sophisticated data-driven programs.
 				</p>
 
 				<p>
@@ -77,43 +59,14 @@
 				</p>
 			</div>
 
-			<h2 id="installation">Installation</h2>
-
-			<div id="content_section">
-				<h3>From the source</h3>
-
-				<ol>
-					<li>Download the source code.</li>
-					<li>Extract the content of the archive.</li>
-					<li>Change current directory to extracted directory.</li>
-					<li>Run <span class="cmd">make install</span> with root privileges.</span> </li>
-				</ol>
-
-				<h3>Dependencies:</h3>
-
-				<ul>
-					<li>glibc &gt;= 2.0</li>
-					<li>libpcap &gt;= 1.0</li>
-					<li>Lua &gt;= 5.2</li>
-				</ul>
-			</div>
-
 			<h2 id="usage">Usage</h2>
 
 			<div id="content_section">
 				<p>
-					Basic usage consists of providing a capture file <span class="cmd">&lt;FILE&gt;</span> and at least one Lua script, provided either as a file with parameter <span class="cmd">-f</span> or as a direct source code with option <span class="cmd">-e</span>. The options can be used multiple times and in combinations.
+					Basic usage consists of providing a capture file <span class="cmd">&lt;FILE&gt;</span> and at least one <em>Lua</em> script, provided either as a file with parameter <span class="cmd">-f</span> or as a direct source code with option <span class="cmd">-e</span>. The options can be used multiple times and in combinations.
 				</p>
 
-				<pre>
-Usage: capdiss &lt;OPTIONS&gt; &lt;FILE&gt;
-
-Options:
- -e, --source='PROGTEXT'    load Lua script source code
- -f, --file=PROGFILE        load Lua script file
- -t, --filter='FILTERTEXT'  apply packet filter
- -v, --version              show version information
- -h, --help                 show usage information (this text)</pre>
+				<pre>Usage: ... bla bla pcap</pre>
 
 				<p>
 					Since version 0.2.0, <em>capdiss</em> supports <strong>Berkeley Packet Filters</strong> (BPF) which can help you filter out unwanted frames before being passed to a user script. BPF has relatively simple syntax and you can cover most of the cases on this level without programming the rules in your scripts. <a href="#">This reference page</a> is a good start.
@@ -128,81 +81,52 @@ tcpdump -w - | capdiss -f script.lua -</pre>
 
 			</div>
 
-			<h2 id="examples">Examples</h2>
+
+			<h2 id="installation">Installation</h2>
 
 			<div id="content_section">
-				<p>
-					To interact with a user script, <em>capdiss</em> looks for a definition of methods <span class="cmd">Capdiss.begin</span>, <span class="cmd">Capdiss.each</span> and <span class="cmd">Capdiss.finish</span>. If any of these methods are found, they are executed.
-				</p>
-
-				<p>
-					As the name suggests, <span class="cmd">Capdiss.begin</span> is executed first, before any frame is retrieved from the capture file. The method <span class="cmd">Capdiss.finish</span> is executed last, after all the frames were retrieved from the capture file. The method <span class="cmd">Capdiss.each</span> is executed in between these two methods for each frame retrieved from the capture file, and unlike the previous methods, it takes two parameters. First parameter is used to pass a timestamp of the frame when it was captured, second parameter is used to pass a frame data.
-				</p>
-
-				<h3>Example 1: Counting Frames</h3>
-
-				<p>
-					Following user script counts and enumerates all the frames inside of a capture file. Every frame is printed out along with its timestamp.
-				</p>
+				<h3>GNU/Linux (Ubuntu)</h3>
 
 				<pre>
---
--- Capdiss script counting frames.
---
-Capdiss = {}
+# Install the software dependencies...
+$ sudo apt-get install libpcap-dev liblua5.2-dev
 
-local i
+# Download the source code...
+$ wget http://codeward.org/software/capdiss/files/capdiss-0.3.0.tar.gz
 
-function Capdiss.begin ()
-	-- Not much to do here, just initialize the counter variable
-	i = 0
-	print ("Begin parsing...")
-end
+# Extract content of the tarball...
+$ tar xzf capdiss-0.3.0.tar.gz
 
-function Capdiss.each (ts, frame)
-	i = i + 1
+# Change current working directory to newly extracted directory...
+$ cd capdiss-0.3.0/
 
-	print (ts .. " :: pkt no. " .. i)
-end
+# Compile the source code...
+$ make
 
-function Capdiss.finish ()
-	print ("Done parsing ... " .. i .. " packets processed.")
-end</pre>
+# Install the compiled binary...
+$ sudo make install</pre>
 
-				<h3>Example 2: Dissecting Ethernet and IP headers</h3>
+				<h3>Windows</h3>
 
-				<p>
-					A packet dissection is alfa and omega for <em>capdiss</em> and for these purposes there are dissectors available, which you can use in your scripts. Please refer to this <a href="https://github.com/antagon/capdiss-scripts/">README</a> for more information on dissectors, and how to use them. The example below uses Ethernet and IP dissectors to extract source and destination MAC addresses and their corresponding IP addresses in each frame.
-				</p>
-
-				<pre>
---
--- Capdiss script parsing Eth and IP headers.
---
-require "protocol/Eth"
-require "protocol/Ip"
-
-Capdiss = {}
-
-function Capdiss.each (ts, frame)
-	local eth = Eth.parse (frame)
-	local ip = Ip.parse (frame:sub (eth.len ()))
-
-	print (ts .. ": " .. ip.saddr .. " (" .. eth.src .. ") =&gt; " .. ip.daddr .. " (" .. eth.dst ..  ")")
-end</pre>
-
+				<p>Please read <a href="#">the manual</a> on how to compile and install <em>capdiss</em> on <em>Windows</em>.</p>
 			</div>
 
 			<h2 id="user_scripts">User scripts</h2>
 
 			<div class="content_section">
 				<p>
-					As a part of the <em>capdiss</em> project we are maintaining a repository of user scripts contributed to by the <em>capdiss</em> users. If you have a script that others may find useful, feel free to submit it as a pull request on github. If you have opted out from using github, you can contribute to the repository by sending an email to address <a href="#">capdiss@codeward.org</a> with the script in the attachment along with licensing information.
+					As a part of the <em>capdiss</em> project we are maintaining an <a href="http://luarocks.org/m/capdiss">official repository</a> of user scripts. To install the scripts, run the command:
 				</p>
 
-				<p>
-					Scripts with obscure or non-free license will be rejected. Same goes for unlicensed heaps of code. If you are contributing by email, do not forget to include your name, otherwise <em>Anonymous</em> name will be assumed.
-				</p>
+				<pre>$ sudo luarocks install capdiss_scripts</pre>
+
+				<p>To see which scripts are bundled in, run the following user script:</p>
+
+				<pre>$ capdiss -r list_scripts</pre>
+
+				<h3>Writing user scripts</h3>
+
+				<p>Please refer to <a href="developer_guide.html">Developer's guide</a>. If you have a script that others may find useful, feel free to submit it as a pull request on <a href="https://github.com/antagon/capdiss-scripts">GitHub</a> for revision.</p>
 			</div>
 
 			<h2 id="download">Download</h2>
