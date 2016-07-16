@@ -55,29 +55,48 @@
 				</p>
 
 				<p>
-					This software is free software licensed under <strong>MIT License</strong>.
+					This software is a free software licensed under <strong>MIT License</strong>.
 				</p>
 			</div>
 
 			<h2 id="usage">Usage</h2>
 
 			<div id="content_section">
+
+				<pre>
+Usage: capdiss &lt;options&gt; &lt;script-name&gt; [args ...]
+
+Options:
+ -f, --file=&lt;pcap-file&gt;    read network frames from a file
+ -F, --filter=&lt;filter&gt;     apply packet filter before reading from a file
+ -v, --version             show version information
+ -h, --help                show usage information</pre>
+
 				<p>
-					Basic usage consists of providing a capture file <span class="cmd">&lt;FILE&gt;</span> and at least one <em>Lua</em> script, provided either as a file with parameter <span class="cmd">-f</span> or as a direct source code with option <span class="cmd">-e</span>. The options can be used multiple times and in combinations.
+					Common use consists of providing file/s from which to read captured network frames, using option <span class="cmd">-f, --file</span>, and one <em>Lua</em> script. <em>Lua</em> script can be provided either as a path to a file (i.e. <em>./luascripts/myscript.lua</em>) or as a module name (i.e. <em>mymodule</em>).
 				</p>
 
-				<pre>Usage: ... bla bla pcap</pre>
+				<pre>$ capdiss -f tftp.pcap ./lua/pretty_print.lua</pre>
 
 				<p>
-					Since version 0.2.0, <em>capdiss</em> supports <strong>Berkeley Packet Filters</strong> (BPF) which can help you filter out unwanted frames before being passed to a user script. BPF has relatively simple syntax and you can cover most of the cases on this level without programming the rules in your scripts. <a href="#">This reference page</a> is a good start.
+					 If a module name is passed, the name is resolved to path using built-in function <span class="cmd">require</span>. Custom paths can be added to the list via environment variable <span class="cmd">LUA_PATH</span>.</p>
+
+				<h3>Packet filters</h3>
+
+				<p>
+					Since version 0.2.0, <em>capdiss</em> supports <strong>Berkeley Packet Filters</strong> (BPF) which can help you filter out unwanted frames before being passed to a user script. BPF has relatively simple syntax and you can cover most of the cases on this level without programming the rules in your scripts. This <a href="http://biot.com/capstats/bpf.html">reference page</a> is a good start to get familiar with the syntax.
 				</p>
 
+				<pre>$ capdiss -f local_net-eth0.pcap -F "broadcast and host kafka" ./lua/pretty_print.lua</pre>
+
+				<h3>Live capture</h3>
+
 				<p>
-					<strong>Live capture</strong> is not supported directly although you can simulate the behaviour replacing a name of capture file with <span class="cmd">-</span>, this tells <em>capdiss</em> to read data from standard input. Then using <span class="cmd">tcpdump</span> you can pipe the content to <em>capdiss</em> like so.
+					Live capture is not supported directly but you can simulate the behaviour by replacing a name of capture file with <span class="cmd">-</span>, this tells <em>capdiss</em> to read data from standard input. Then you can pipe output from <span class="cmd">tcpdump</span> to <em>capdiss</em>.
 				</p>
 
 				<pre>
-tcpdump -w - | capdiss -f script.lua -</pre>
+$ tcpdump -w - | capdiss -f - mymodule</pre>
 
 			</div>
 
@@ -126,7 +145,7 @@ $ sudo make install</pre>
 
 				<h3>Writing user scripts</h3>
 
-				<p>Please refer to <a href="developer_guide.html">Developer's guide</a>. If you have a script that others may find useful, feel free to submit it as a pull request on <a href="https://github.com/antagon/capdiss-scripts">GitHub</a> for revision.</p>
+				<p>Please refer to the official <a href="man_userscripts.html">Reference Manual</a>. If you have a script that others may find useful, feel free to submit it as a pull request on <a href="https://github.com/antagon/capdiss-scripts">GitHub</a> for revision.</p>
 			</div>
 
 			<h2 id="download">Download</h2>
@@ -137,8 +156,9 @@ $ sudo make install</pre>
 				</p>
 
 				<ul>
-					<li> <a href="files/capdiss-0.2.1.tar.gz">capdiss-0.2.1.tar.gz</a> (<a href="files/capdiss-0.2.1.tar.gz.sig">signature</a>) (<a href="https://github.com/antagon/capdiss/blob/0.2.1/ChangeLog">changelog</a>)</li>
-					<li> <a href="files/capdiss-0.1.0.tar.gz">capdiss-0.1.0.tar.gz</a> (<a href="files/capdiss-0.1.0.tar.gz.sig">signature</a>) (<a href="https://github.com/antagon/capdiss/blob/0.1.0/ChangeLog">changelog</a>)</li>
+					<li> <a href="files/capdiss-0.3.0.tar.gz">capdiss-0.3.0.tar.gz</a> <sup>[<a href="files/capdiss-0.3.0.tar.gz.sig">signature</a>]</sup> <sup>[<a href="https://github.com/antagon/capdiss/blob/0.3.0/ChangeLog">changelog</a>]</sup> </li>
+					<li> <a href="files/capdiss-0.2.1.tar.gz">capdiss-0.2.1.tar.gz</a> <sup>[<a href="files/capdiss-0.2.1.tar.gz.sig">signature</a>]</sup> <sup>[<a href="https://github.com/antagon/capdiss/blob/0.2.1/ChangeLog">changelog</a>]</sup> </li>
+					<li> <a href="files/capdiss-0.1.0.tar.gz">capdiss-0.1.0.tar.gz</a> <sup>[<a href="files/capdiss-0.1.0.tar.gz.sig">signature</a>]</sup> <sup>[<a href="https://github.com/antagon/capdiss/blob/0.1.0/ChangeLog">changelog</a>]</sup> </li>
 				</ul>
 			</div>
 		</div>
