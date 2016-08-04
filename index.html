@@ -47,15 +47,27 @@
 
 			<div id="content_section">
 				<p>
-					Capture file dissector with embedded <em>Lua</em> engine. With
-					this tool an analyst has access to powerful scripting
-					environment that can be used for endless variety of tasks,
-					starting from simple packet dissection to building
-					sophisticated data-driven programs.
+					<em>Capdiss</em> is a runtime environment for reading
+					capture files (<em>pcap</em>, <em>pcap-ng</em>). It defines
+					a simple event-driven API for <em>Lua</em> scripts.
+					Scripts can access the content of a capture file without
+					having to write a complex code &#8212; individual frames
+					are passed to a script as a simple byte string.
 				</p>
 
 				<p>
-					This software is a free software licensed under <strong>MIT License</strong>.
+					The aim of <em>capdiss</em> is to provide a comfortable
+					environment for a packet manipulation, where an analyst has
+					to write <em>less code, to do more</em>, in type-safe
+					language. To achieve that, <em>capdiss</em> embeds
+					powerful, yet minimalistic, scripting language <em><a
+					href="http://lua.org/">Lua</a></em>, and supports the
+					native packet dissection framework <em><a
+					href="http://codeward.org/software/coroner">coroner</a></em>.
+				</p>
+
+				<p>
+					<em>Capdiss</em> is a free software licensed under <strong>MIT License</strong>.
 				</p>
 			</div>
 
@@ -73,13 +85,13 @@ Options:
  -h, --help                show usage information</pre>
 
 				<p>
-					Common use consists of providing file/s from which to read captured network frames, using option <span class="cmd">-f, --file</span>, and one <em>Lua</em> script. <em>Lua</em> script can be provided either as a path to a file (i.e. <em>./luascripts/myscript.lua</em>) or as a module name (i.e. <em>mymodule</em>).
+					A common use consists of providing a file from which to read captured network frames, using option <span class="cmd">-f, --file</span>, and one <em>Lua</em> script. <em>Lua</em> script can be provided either as a path to a file (i.e. <em>./luascripts/myscript.lua</em>) or as a module name (i.e. <em>mymodule</em>).
 				</p>
 
-				<pre>$ capdiss -f tftp.pcap ./lua/pretty_print.lua</pre>
+				<pre>$ capdiss -f tftp.pcap ./print.lua</pre>
 
 				<p>
-					 If a module name is passed, the name is resolved to path using built-in function <span class="cmd">require</span>. Custom paths can be added to the list via environment variable <span class="cmd">LUA_PATH</span>.</p>
+					 If a module name is passed, the name is resolved to a full-path using the <em>Lua</em>'s built-in function <span class="cmd">require</span>. Custom paths, where to look for a module, can be added to the list via environment variable <span class="cmd">LUA_PATH</span>.</p>
 
 				<h3>Packet filters</h3>
 
@@ -87,7 +99,7 @@ Options:
 					Since version 0.2.0, <em>capdiss</em> supports <strong>Berkeley Packet Filters</strong> (BPF) which can help you filter out unwanted frames before being passed to a user script. BPF has relatively simple syntax and you can cover most of the cases on this level without programming the rules in your scripts. This <a href="http://biot.com/capstats/bpf.html">reference page</a> is a good start to get familiar with the syntax.
 				</p>
 
-				<pre>$ capdiss -f local_net-eth0.pcap -F "broadcast and host kafka" ./lua/pretty_print.lua</pre>
+				<pre>$ capdiss -f local_net-eth0.pcap -F "broadcast or ip host 192.168.1.69" ./print.lua</pre>
 
 				<h3>Live capture</h3>
 
@@ -96,7 +108,7 @@ Options:
 				</p>
 
 				<pre>
-$ tcpdump -w - | capdiss -f - mymodule</pre>
+$ tcpdump -w - | capdiss -f - ./print.lua</pre>
 
 			</div>
 
@@ -127,7 +139,7 @@ $ sudo make install</pre>
 
 				<h3>Windows</h3>
 
-				<p>Please read <a href="#">the manual</a> on how to compile and install <em>capdiss</em> on <em>Windows</em>.</p>
+				<p>Please read <a href="man_windowsinstall.html">the guide</a> on how to compile and install <em>capdiss</em> on <em>Windows</em>.</p>
 			</div>
 
 			<h2 id="user_scripts">User scripts</h2>
@@ -141,7 +153,7 @@ $ sudo make install</pre>
 
 				<p>To see which scripts are bundled in, run the following user script:</p>
 
-				<pre>$ capdiss -r list_scripts</pre>
+				<pre>$ capdiss list_scripts</pre>
 
 				<h3>Writing user scripts</h3>
 
