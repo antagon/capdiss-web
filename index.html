@@ -50,15 +50,9 @@
 					<em>Capdiss</em> is a runtime environment for reading
 					capture files (<em>pcap</em>, <em>pcap-ng</em>). It defines
 					a simple event-driven API for <em>Lua</em> scripts.
-					Scripts can access the content of a capture file without
-					having to write a complex code &#8212; individual frames
-					are passed to a script as a simple byte string.
-				</p>
-
-				<p>
 					The aim of <em>capdiss</em> is to provide a comfortable
 					environment for a packet manipulation, where an analyst has
-					to write <em>less code, to do more</em>, in type-safe
+					to write <em>less code, to do more</em>, in a type-safe
 					language. To achieve that, <em>capdiss</em> embeds
 					powerful, yet minimalistic, scripting language <em><a
 					href="http://lua.org/">Lua</a></em>, and supports the
@@ -96,7 +90,14 @@ Options:
 				<h3>Packet filters</h3>
 
 				<p>
-					Since version 0.2.0, <em>capdiss</em> supports <strong>Berkeley Packet Filters</strong> (BPF) which can help you filter out unwanted frames before being passed to a user script. BPF has relatively simple syntax and you can cover most of the cases on this level without programming the rules in your scripts. This <a href="http://biot.com/capstats/bpf.html">reference page</a> is a good start to get familiar with the syntax.
+					Since version 0.2.0, <em>capdiss</em> supports
+					<strong>Berkeley Packet Filters</strong> (BPF) which can
+					help you filter out unwanted frames before being passed to
+					a user script. BPF has relatively simple syntax and you can
+					cover most of the cases on this level without having to
+					program the rules in your script. This <a
+					href="http://biot.com/capstats/bpf.html">reference page</a>
+					is a good start to get familiar with the syntax.
 				</p>
 
 				<pre>$ capdiss -f local_net-eth0.pcap -F "broadcast or ip host 192.168.1.69" ./print.lua</pre>
@@ -104,7 +105,11 @@ Options:
 				<h3>Live capture</h3>
 
 				<p>
-					Live capture is not supported directly but you can simulate the behaviour by replacing a name of capture file with <span class="cmd">-</span>, this tells <em>capdiss</em> to read data from standard input. Then you can pipe output from <span class="cmd">tcpdump</span> to <em>capdiss</em>.
+					Live capture is not supported but you can simulate the
+					behavior by replacing the name of a capture file with <span
+					class="cmd">-</span>, this tells <em>capdiss</em> to read
+					data from standard input (<em>stdin</em>). Then you can use
+					<em>tcpdump</em> to pipe data to <em>capdiss</em>.
 				</p>
 
 				<pre>
@@ -139,14 +144,20 @@ $ sudo make install</pre>
 
 				<h3>Windows</h3>
 
-				<p>Please read <a href="man_windowsinstall.html">the guide</a> on how to compile and install <em>capdiss</em> on <em>Windows</em>.</p>
+				<p>The source code is portable to <em>Windows</em>. It can be compiled using the <em>MinGW</em> suite. Just make sure the path to utilities <span class="cmd">make</span> and <span class="cmd">mingw32-gcc</span> is stored inside the <span class="cmd">%PATH%</span> variable.</p>
+
+				<p>On <em>Windows</em>, <em>Lua</em> is linked statically to the executable, all the neccessary files are already in the source directory. Only dependency that needs to be installed are runtime files for <em>WinPcap</em>. You can download them from the <a href="http://www.winpcap.org/">official site</a>.</p>
+
+				<pre>
+make CC=mingw32-gcc -f Makefile.win
+</pre>
 			</div>
 
 			<h2 id="user_scripts">User scripts</h2>
 
 			<div class="content_section">
 				<p>
-					As a part of the <em>capdiss</em> project we are maintaining an <a href="http://luarocks.org/m/capdiss">official repository</a> of user scripts. To install the scripts, run the command:
+					As a part of the <em>capdiss</em> project we are maintaining an <a href="http://github.com/antagon/capdiss_scripts">official repository</a> of user scripts. To install the scripts, run the command:
 				</p>
 
 				<pre>$ sudo luarocks install capdiss_scripts</pre>
