@@ -2,7 +2,7 @@
 	<head>
 		<title>capdiss - Capture File Dissector</title>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+		<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
@@ -10,7 +10,7 @@
 			<h1>capdiss</h1>
 
 			<div id="menu">
-				<span class="menu_item"> <a href="#news">News</a> </span>
+				<span class="menu_item"> <a href="#news">Announcements</a> </span>
 				<span class="delim">&nbsp;</span>
 				<span class="menu_item"> <a href="#description">Description</a> </span>
 				<span class="delim">&nbsp;</span>
@@ -18,16 +18,20 @@
 				<span class="delim">&nbsp;</span>
 				<span class="menu_item"> <a href="#installation">Installation</a> </span>
 				<span class="delim">&nbsp;</span>
-				<span class="menu_item"> <a href="#user_scripts">User scripts</a> </span>
+				<span class="menu_item"> <a href="#user_modules">User modules</a> </span>
 				<span class="delim">&nbsp;</span>
 				<span class="menu_item"> <a href="#download" style="font-weight:bold;">Download</a> </span>
 			</div>
 
-			<h2 id="news">News</h2>
+			<h2 id="news">Announcements</h2>
 
 			<div id="content_section">
 				<p>
-					<strong>2016-07-??</strong> &#8212; Version <strong>0.3.0</strong> released.
+					<strong>2016-08-28</strong> &#8212; Version <strong>0.3.1</strong> released.
+				</p>
+
+				<p>
+					<strong>2016-08-26</strong> &#8212; Version <strong>0.3.0</strong> released.
 				</p>
 
 				<p>
@@ -51,13 +55,13 @@
 					capture files (<em>pcap</em>, <em>pcap-ng</em>). It defines
 					a simple event-driven API for <em>Lua</em> scripts.
 					The aim of <em>capdiss</em> is to provide a comfortable
-					environment for a packet manipulation, where an analyst has
+					environment for packet manipulation, where an analyst has
 					to write <em>less code, to do more</em>, in a type-safe
 					language. To achieve that, <em>capdiss</em> embeds
 					powerful, yet minimalistic, scripting language <em><a
 					href="http://lua.org/">Lua</a></em>, and supports the
 					native packet dissection framework <em><a
-					href="http://codeward.org/software/coroner">coroner</a></em>.
+					href="http://codeward.org/software/coroner"><strong>Coroner</strong></a></em>.
 				</p>
 
 				<p>
@@ -82,7 +86,7 @@ Options:
 					A common use consists of providing a file from which to read captured network frames, using option <span class="cmd">-f, --file</span>, and one <em>Lua</em> script. <em>Lua</em> script can be provided either as a path to a file (i.e. <em>./luascripts/myscript.lua</em>) or as a module name (i.e. <em>mymodule</em>).
 				</p>
 
-				<pre>$ capdiss -f tftp.pcap ./print.lua</pre>
+				<pre>$ capdiss -f tftp.pcap print</pre>
 
 				<p>
 					 If a module name is passed, the name is resolved to a full-path using the <em>Lua</em>'s built-in function <span class="cmd">require</span>. Custom paths, where to look for a module, can be added to the list via environment variable <span class="cmd">LUA_PATH</span>.</p>
@@ -93,14 +97,14 @@ Options:
 					Since version 0.2.0, <em>capdiss</em> supports
 					<strong>Berkeley Packet Filters</strong> (BPF) which can
 					help you filter out unwanted frames before being passed to
-					a user script. BPF has relatively simple syntax and you can
+					a user module. BPF has relatively simple syntax and you can
 					cover most of the cases on this level without having to
 					program the rules in your script. This <a
 					href="http://biot.com/capstats/bpf.html">reference page</a>
 					is a good start to get familiar with the syntax.
 				</p>
 
-				<pre>$ capdiss -f local_net-eth0.pcap -F "broadcast or ip host 192.168.1.69" ./print.lua</pre>
+				<pre>$ capdiss -f local_net-eth0.pcap -F "broadcast or ip host 192.168.1.69" print</pre>
 
 				<h3>Live capture</h3>
 
@@ -113,7 +117,7 @@ Options:
 				</p>
 
 				<pre>
-$ tcpdump -w - | capdiss -f - ./print.lua</pre>
+$ tcpdump -w - | capdiss -f - print</pre>
 
 			</div>
 
@@ -121,20 +125,20 @@ $ tcpdump -w - | capdiss -f - ./print.lua</pre>
 			<h2 id="installation">Installation</h2>
 
 			<div id="content_section">
-				<h3>GNU/Linux (Ubuntu)</h3>
+				<h3>GNU/Linux (Debian derivates)</h3>
 
 				<pre>
 # Install the software dependencies...
 $ sudo apt-get install libpcap-dev liblua5.2-dev
 
 # Download the source code...
-$ wget http://codeward.org/software/capdiss/files/capdiss-0.3.0.tar.gz
+$ wget https://codeward.org/software/capdiss/files/capdiss-0.3.1.tar.gz
 
 # Extract content of the tarball...
-$ tar xzf capdiss-0.3.0.tar.gz
+$ tar xzf capdiss-0.3.1.tar.gz
 
 # Change current working directory to newly extracted directory...
-$ cd capdiss-0.3.0/
+$ cd capdiss-0.3.1/
 
 # Compile the source code...
 $ make
@@ -144,31 +148,46 @@ $ sudo make install</pre>
 
 				<h3>Windows</h3>
 
-				<p>The source code is portable to <em>Windows</em>. It can be compiled using the <em>MinGW</em> suite. Just make sure the path to utilities <span class="cmd">make</span> and <span class="cmd">mingw32-gcc</span> is stored inside the <span class="cmd">%PATH%</span> variable.</p>
+				<p>
+					The source code is portable to <em>Windows</em>. It can be
+					compiled using the <em>MinGW</em> suite. Just make sure the
+					path to utilities <span class="cmd">make</span> and <span
+					class="cmd">mingw32-gcc</span> is referenced in the <span
+					class="cmd">%PATH%</span> variable.
+				</p>
 
-				<p>On <em>Windows</em>, <em>Lua</em> is linked statically to the executable, all the neccessary files are already in the source directory. Only dependency that needs to be installed are runtime files for <em>WinPcap</em>. You can download them from the <a href="http://www.winpcap.org/">official site</a>.</p>
+				<p>
+					On <em>Windows</em>, <em>Lua</em> is linked statically to
+					the executable. All the neccessary files are already in the
+					source tree. Only dependency that needs to be installed
+					are runtime files for <strike><em><a
+					href="http://www.winpcap.org/">WinPcap</a></em></strike> <em><a
+					href="https://nmap.org/npcap/">npcap</a></em> [<em>WinPcap is still a good choice if you are running XP's</em>].
+				</p>
 
 				<pre>
-make CC=mingw32-gcc -f Makefile.win
+mingw32-make CC=mingw32-gcc -f Makefile.win
 </pre>
+
+				<p> <em>Please note, that this software HAS NOT been tested on Windows, apart from the compilation! Chances are, the software is full of odd bugs.</em> </p>
 			</div>
 
-			<h2 id="user_scripts">User scripts</h2>
+			<h2 id="user_modules">User modules</h2>
 
 			<div class="content_section">
 				<p>
-					As a part of the <em>capdiss</em> project we are maintaining an <a href="http://github.com/antagon/capdiss_scripts">official repository</a> of user scripts. To install the scripts, run the command:
+					The <a href="https://github.com/antagon/capdiss_modules">official repository</a> lists a selection of user modules. To install the modules, run the command:
 				</p>
 
-				<pre>$ sudo luarocks install capdiss_scripts</pre>
+				<pre>$ sudo luarocks install capdiss-mods-all</pre>
 
-				<p>To see which scripts are bundled in, run the following user script:</p>
+				<p>To see which modules are bundled in:</p>
 
-				<pre>$ capdiss list_scripts</pre>
+				<pre>$ capdiss modlist</pre>
 
-				<h3>Writing user scripts</h3>
+				<p>To see information about a specific module:</p>
 
-				<p>Please refer to the official <a href="man_userscripts.html">Reference Manual</a>. If you have a script that others may find useful, feel free to submit it as a pull request on <a href="https://github.com/antagon/capdiss-scripts">GitHub</a> for revision.</p>
+				<pre>$ capdiss modinfo modinfo</pre>
 			</div>
 
 			<h2 id="download">Download</h2>
@@ -179,7 +198,7 @@ make CC=mingw32-gcc -f Makefile.win
 				</p>
 
 				<ul>
-					<li> <a href="files/capdiss-0.3.0.tar.gz">capdiss-0.3.0.tar.gz</a> <sup>[<a href="files/capdiss-0.3.0.tar.gz.sig">signature</a>]</sup> <sup>[<a href="https://github.com/antagon/capdiss/blob/0.3.0/ChangeLog">changelog</a>]</sup> </li>
+					<li> <a href="files/capdiss-0.3.1.tar.gz">capdiss-0.3.1.tar.gz</a> <sup>[<a href="files/capdiss-0.3.1.tar.gz.sig">signature</a>]</sup> <sup>[<a href="https://github.com/antagon/capdiss/blob/0.3.1/ChangeLog">changelog</a>]</sup> </li>
 					<li> <a href="files/capdiss-0.2.1.tar.gz">capdiss-0.2.1.tar.gz</a> <sup>[<a href="files/capdiss-0.2.1.tar.gz.sig">signature</a>]</sup> <sup>[<a href="https://github.com/antagon/capdiss/blob/0.2.1/ChangeLog">changelog</a>]</sup> </li>
 					<li> <a href="files/capdiss-0.1.0.tar.gz">capdiss-0.1.0.tar.gz</a> <sup>[<a href="files/capdiss-0.1.0.tar.gz.sig">signature</a>]</sup> <sup>[<a href="https://github.com/antagon/capdiss/blob/0.1.0/ChangeLog">changelog</a>]</sup> </li>
 				</ul>

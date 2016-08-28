@@ -4,7 +4,7 @@ h2 { font-size:140%; margin-bottom:5px; padding-bottom:5px; border-bottom:1px so
 h3 { font-size:110%; margin-bottom:5px; padding-bottom:5px; }
 a { text-decoration:none; color:#2D6FAC; }
 a:hover { text-decoration:underline; }
-p { text-align:justify; }
+p { text-align:justify; line-height:160%; }
 #menu { width:100%; margin:0 auto; margin-bottom:40px; }
 #menu .menu_item {  }
 #menu .delim { font-weight:bold; margin-left:5px; margin-right:5px; }
